@@ -34,7 +34,7 @@ int main()
         system("cls");
         cout << "Current Score : " << currPoints << "\tHighest score: " << highScore << endl;
         cout << "Wanna play WORDLE?\n";
-        cout << "1. Yes\n2. No\n> ";
+        cout << "1. Yes of course!\n2. No!\n> ";
         cin >> ch;
         if(ch == 1)
         {
