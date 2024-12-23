@@ -18,15 +18,13 @@ int currPoints = 0;
 int highScore = 0;
 bool isInHighscore = false;
 
-int main()
-{
+int main(){
     srand(time(NULL));
     GetWords();
     GetValues();
     bool hasWon = false;
     int ch;
-    do
-    {
+    do{
         SaveValues();
         int values = 0;
         string guesses[5];
@@ -36,25 +34,20 @@ int main()
         cout << "Wanna play WORDLE?\n";
         cout << "1. Yes of course!\n2. No!\n> ";
         cin >> ch;
-        if(ch == 1)
-        {
+        if(ch == 1){
             string parola = GenerateWord();
             string guess;
-            for(int lives = 6; lives > 0 && !hasWon; lives--)
-            {
+            for(int lives = 6; lives > 0 && !hasWon; lives--){
                 bool isValid = false;
-                while(!isValid)
-                {
+                while(!isValid){
                     system("cls");
-                    for(int i = 0; i < 5; i++) 
-                    {
+                    for(int i = 0; i < 5; i++) {
                         Check(guesses[i], parola);
                         cout << " ";
                     }
                     cout << endl << lives << " lives remaining\nGuess the word!\n> ";
                     cin >> guess;
-                    if(guess == parola) 
-                    {
+                    if(guess == parola) {
                         cout << "You're right!\nThe word was " << "\033[0;32m" << parola << "\033[0m\n";
                         hasWon = true;
                         currPoints += lives*multiplier;
@@ -62,33 +55,20 @@ int main()
                         if(currPoints > highScore) highScore = currPoints;
                         break;
                     }
-                    for(int i = 0; i < len && !isValid; i++)
-                    {
-                        if(guess == words[i])
-                        {
+                    for(int i = 0; i < len && !isValid; i++){
+                        if(guess == words[i]){
                             isValid = true;
                             guesses[values] = guess;
                             values++;
                         }
                     }
-                    if(guess.length() != 5) 
-                    {
-                        cout << "Word length not allowed\n";
-                        system("PAUSE");
-                    }
-                    else if(!isValid) 
-                    {
-                        cout << "Word does not exist\n";
-                        system("PAUSE");
-                    }
+                    if(guess.length() != 5 || !isValid) cout << "Word is not valid!\n";
                 }
-                if(!hasWon)
-                Check(guess, parola);
+                if(!hasWon) Check(guess, parola);
                 system("PAUSE");
             }
             system("cls");
-            if(!hasWon)
-            {
+            if(!hasWon){
                 currPoints = 0;
                 isInHighscore = false;
                 cout << "The word was: " << parola << endl;
@@ -99,22 +79,19 @@ int main()
     return 1;
 }
 
-string GenerateWord()
-{
+string GenerateWord(){
     int random = rand() % len;
     return words[random];
 }
 
-void SaveValues()
-{
+void SaveValues(){
     FILE *pf = fopen("Docs/stats.bin", "wb");
     fwrite(&currPoints, sizeof(int), 1, pf);
     fwrite(&highScore, sizeof(int), 1, pf);
     fclose(pf);
 }
 
-void GetWords()
-{	
+void GetWords(){	
     ifstream wordsIF("Docs/words.txt");
     string word;
     int i = 0;
@@ -125,30 +102,24 @@ void GetWords()
 	}
 }
 
-void GetValues()
-{
+void GetValues(){
     FILE *pf = fopen("Docs/stats.bin", "rb");
     fread(&currPoints, sizeof(int), 1, pf);
     fread(&highScore, sizeof(int), 1, pf);
     fclose(pf);
 }
 
-void Check(string guess, string parola)
-{
+void Check(string guess, string parola){
     int status[5] = {0};
-    for(int i = 0; i < guess.length(); i++)
-    {
+    for(int i = 0; i < guess.length(); i++){
         bool found = false;
-        for(int j = 0; j < parola.length() && !found; j++)
-        {
-            if(i == j && guess[i] == parola[j]) 
-            {
+        for(int j = 0; j < parola.length() && !found; j++){
+            if(i == j && guess[i] == parola[j]) {
                 status[j] = 2;
                 found = true;
                 cout << "\033[0;32m" << parola[j] << "\033[0m";
             }
-            else if(i != j && guess[i] == parola[j] && status[j] != 2 && status[j] != 1 && parola[j] != guess[j]) 
-            {
+            else if(i != j && guess[i] == parola[j] && status[j] != 2 && status[j] != 1 && parola[j] != guess[j]){
                 status[j] = 1;
                 found = true;
                 cout << "\033[0;33m" << parola[j] << "\033[0m";
